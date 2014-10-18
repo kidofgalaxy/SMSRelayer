@@ -1,9 +1,9 @@
 package com.p.SMSRelayer.Utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
+import com.p.SMSRelayer.DataType.Message;
 
 /**
  * Created by p on 2014/10/17.
@@ -26,10 +26,17 @@ public class SmsTask extends Thread {
     @Override
     public void run(){
         Cursor cursor = context.getContentResolver()
-                                    .query(Uri.parse("content://sms/inbox"),null,"read=0",null,null);
+                                    .query(Uri.parse("content://sms/inbox"), null, "read=0", null, null);
         if(cursor != null){
             while(cursor.moveToNext()){
-            
+                Message amsg = new Message(
+                                cursor.getString(cursor.getColumnIndex("person")),
+                                cursor.getString(cursor.getColumnIndex("body")),
+                                cursor.getLong(cursor.getColumnIndex("date"))
+                                );
+                if(target_phone != null){
+                    amsg.send(target_phone);
+                }
             }
         }
 
