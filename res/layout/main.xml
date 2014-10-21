@@ -5,10 +5,17 @@
               android:layout_height="fill_parent"
         >
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Hello World, MyActivity"
-            />
+    <Button
+            android:text="停止服务"
+            android:onClick="stopService"
+            android:id="@+id/stop_service_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    <Button
+            android:text="发送短信"
+            android:onClick="sendMessage"
+            android:id="@+id/send_msg_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 </LinearLayout>
 

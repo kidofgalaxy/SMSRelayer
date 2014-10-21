@@ -1,9 +1,14 @@
 package com.p.SMSRelayer.Utils;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import com.p.SMSRelayer.DataType.Message;
+
+import java.util.concurrent.locks.Lock;
 
 /**
  * Created by p on 2014/10/17.
@@ -15,30 +20,44 @@ import com.p.SMSRelayer.DataType.Message;
 public class SmsTask extends Thread {
     String target_phone = null;
     Context context = null;
+    ContentValues values = new ContentValues();
+
+
     public SmsTask(Context ctx){
         context = ctx;
     }
-    public SmsTask(String pnum,Context ctx){
-        target_phone = pnum;
+    public SmsTask(String phone,Context ctx){
+        target_phone = phone;
         context = ctx;
+        values.put("read","1");
     }
 
     @Override
     public void run(){
-        Cursor cursor = context.getContentResolver()
-                                    .query(Uri.parse("content://sms/inbox"), null, "read=0", null, null);
+        ContentResolver resolver = context.getContentResolver();
+        Cursor cursor = resolver.query(Uri.parse("content://sms/inbox"), null, "read=0", null, null);
+        int msg_id = -1,cnum = -1;
         if(cursor != null){
             while(cursor.moveToNext()){
                 Message amsg = new Message(
-                                cursor.getString(cursor.getColumnIndex("person")),
+                                cursor.getString(cursor.getColumnIndex("address")),
                                 cursor.getString(cursor.getColumnIndex("body")),
                                 cursor.getLong(cursor.getColumnIndex("date"))
                                 );
+                msg_id = cursor.getInt(cursor.getColumnIndex("_id"));
+
+                cnum = context.getContentResolver().update(Uri.parse("content://sms/inbox/"),
+                        values,"_id="+msg_id,null);
+                if(cnum > 0)
+                    Log.d("SmsTask","修改短信状态成功");
+                else Log.d("SmsTask","修改短信状态失败");
                 if(target_phone != null){
-                    amsg.send(target_phone);
+                    amsg.send(target_phone,context);
+                    amsg.show();
                 }
             }
         }
 
+        //将所有未读短信标记为已发送
     }
 }
