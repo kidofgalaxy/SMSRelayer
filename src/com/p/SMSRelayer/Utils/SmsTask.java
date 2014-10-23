@@ -40,6 +40,7 @@ public class SmsTask extends Thread {
         if(cursor != null){
             while(cursor.moveToNext()){
                 Message amsg = new Message(
+                                cursor.getString(cursor.getColumnIndex("person")),
                                 cursor.getString(cursor.getColumnIndex("address")),
                                 cursor.getString(cursor.getColumnIndex("body")),
                                 cursor.getLong(cursor.getColumnIndex("date"))

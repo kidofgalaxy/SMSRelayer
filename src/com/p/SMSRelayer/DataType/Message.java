@@ -9,16 +9,18 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by p on 2014/10/18.
  * 消息类，用于储存一条收到的消息，并发送。
  */
 public class Message {
-    String from,content,date;
+    String from,content,date,person;
 
-    public Message(String person,String body,long date){
-        from = person;
+    public Message(String person,String address,String body,long date){
+        from = address;
+        this.person = person;
         content = body;
         SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         java.util.Date dt = new Date(date );
@@ -26,10 +28,10 @@ public class Message {
 
     }
     public void send(String target,Context context){
-        SmsManager smsMagager = SmsManager.getDefault();
+        SmsManager smsManager = SmsManager.getDefault();
 
 
-        // create the sentIntent parameter
+        /*// create the sentIntent parameter
         Intent sentIntent = new Intent("SENT_SMS_ACTION");
 
         PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, sentIntent,
@@ -39,13 +41,21 @@ public class Message {
         Intent deliverIntent = new Intent("DELIVERED_SMS_ACTION");
 
         PendingIntent deliverPI = PendingIntent.getBroadcast(context, 0,
-                deliverIntent, 0);
+                deliverIntent, 0);*/
+        String transfer_str = content+"\n来自:";
+        if(person != null)
+            transfer_str += person;
+        transfer_str +=" "+from+"\n";
+        transfer_str += "时间:"+date;
 
+        Log.d("Message",transfer_str);
+        List<String> divideContents = smsManager.divideMessage(transfer_str);
+        for (String text : divideContents) {
+            smsManager.sendTextMessage( target , null , text , null , null);
+        }
 
-
-        smsMagager.sendTextMessage( target , null , content , sentPI , deliverPI );
     }
     public void show(){
-        Log.d("a message","来自:"+from+"接受时间:"+date+""+content);
+        Log.d("Message","来自:"+from+"接受时间:"+date+""+content);
     }
 }

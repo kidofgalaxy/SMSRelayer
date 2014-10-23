@@ -12,9 +12,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     <Button
-            android:text="发送短信"
+            android:text="发送测试短信"
             android:onClick="sendMessage"
             android:id="@+id/send_msg_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    <EditText
+            android:id="@+id/phone_num_text"
+            android:layout_width="200px"
+            android:layout_height="50px"/>
+    <Button
+            android:id="@+id/change_phone_bt"
+            android:text="修改接受号码"
+            android:onClick="changePhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 </LinearLayout>
