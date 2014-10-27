@@ -20,8 +20,10 @@ import java.util.regex.Pattern;
  *
  */
 public class SmsMonitor extends Service {
-    Thread mTread = null;
+
     SmsObserver observer = null;
+    Handler mhandler = null;
+    ContentResolver resolver = null;
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -40,6 +42,13 @@ public class SmsMonitor extends Service {
             }else{
                 Log.d("SmsMonitor","Pettern Not Matches!");
             }
+        }else if(intent.hasExtra("STOP_SERVICE")){
+            if(intent.getStringExtra("STOP_SERVICE").contains("YES")){
+                observer.stop();
+                resolver.unregisterContentObserver(observer);
+                stopSelf();
+            }
+
         }
 
         return START_REDELIVER_INTENT;
@@ -48,9 +57,12 @@ public class SmsMonitor extends Service {
     @Override
     public void onCreate(){
         Log.d("SmsMonitor","service Started");
-        ContentResolver resolver=getContentResolver();
-        observer = new SmsObserver(new Handler(),this);
+        resolver=getContentResolver();
+        mhandler = new Handler();
+        observer = new SmsObserver(mhandler,this);
         //注册观察者类时得到回调数据确定一个给定的内容URI变化。
         resolver.registerContentObserver(Uri.parse("content://sms"), true, observer);
+
     }
+
 }

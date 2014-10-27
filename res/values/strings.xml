@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">短信中继器</string>
+    <string name="DB_CRT_SENSOR_TB">create table if not exists sensor
+	    (area text,type text,time text,val text)</string>
+    <string name="database_name">data.db</string>
 </resources>

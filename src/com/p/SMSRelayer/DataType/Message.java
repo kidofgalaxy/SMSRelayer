@@ -1,13 +1,10 @@
 package com.p.SMSRelayer.DataType;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,13 +13,14 @@ import java.util.List;
  * 消息类，用于储存一条收到的消息，并发送。
  */
 public class Message {
-    String from,content,date,person;
+    public String from,content,date,person,id;
 
-    public Message(String person,String address,String body,long date){
+    public Message(String id,String person,String address,String body,long date){
+        this.id = id;
         from = address;
         this.person = person;
         content = body;
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat sdf= new SimpleDateFormat("yy/MM/dd HH:mm");
         java.util.Date dt = new Date(date );
         this.date = sdf.format(dt);  //得到精确到秒的表示：08/31/2006 21:08:00
 
@@ -56,6 +54,6 @@ public class Message {
 
     }
     public void show(){
-        Log.d("Message","来自:"+from+"接受时间:"+date+""+content);
+        Log.d("Message","id="+id+" "+content+"来自:"+from+"接受时间:"+date);
     }
 }
